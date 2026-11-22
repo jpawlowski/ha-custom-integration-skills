@@ -1,0 +1,27 @@
+{
+  "name": "ha-custom-integration-skills",
+  "owner": {
+    "name": "Julian Pawlowski",
+    "url": "https://github.com/jpawlowski"
+  },
+  "metadata": {
+    "description": "Optional agent workflow plugins for Home Assistant custom integration developers. Not affiliated with Home Assistant or the Open Home Foundation."
+  },
+  "plugins": [
+    {
+      "name": "haci-plan",
+      "source": "./plugins/haci-plan",
+      "description": "Settle requirements before code: interview the developer, then plan large changes in phases."
+    },
+    {
+      "name": "haci-review",
+      "source": "./plugins/haci-review",
+      "description": "Review a change before it is committed: simplify, rerun the gates, then a reviewer that did not write it."
+    },
+    {
+      "name": "haci-triage",
+      "source": "./plugins/haci-triage",
+      "description": "Work through a backlog of GitHub issues one at a time, each fix on its own branch and pull request."
+    }
+  ]
+}

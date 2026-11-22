@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "haci-plan",
+  "version": "0.1.0",
+  "description": "Settle requirements before code: interview the developer, then plan large changes in phases.",
+  "author": {
+    "name": "Julian Pawlowski",
+    "url": "https://github.com/jpawlowski"
+  },
+  "homepage": "https://github.com/jpawlowski/ha-custom-integration-skills",
+  "repository": "https://github.com/jpawlowski/ha-custom-integration-skills",
+  "license": "MIT",
+  "keywords": [
+    "home-assistant",
+    "custom-integration",
+    "planning",
+    "requirements",
+    "interview"
+  ]
+}

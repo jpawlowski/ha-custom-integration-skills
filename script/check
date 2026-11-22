@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""Check that the marketplace, the plugin manifests and the skills agree with each other.
+
+Usage:
+    script/check
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+CLAUDE_MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
+CODEX_MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
+AGENT_PLUGINS_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+NAME = re.compile(r"^haci-[a-z0-9]+(-[a-z0-9]+)*$")
+LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
+
+errors: list[str] = []
+
+
+def fail(message: str) -> None:
+    errors.append(message)
+
+
+def load(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as err:
+        fail(f"{path.relative_to(ROOT)}: {err}")
+        return {}
+
+
+def frontmatter(path: Path) -> dict[str, str]:
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return {}
+    block = text[4 : text.find("\n---", 4)]
+    fields: dict[str, str] = {}
+    key = None
+    for line in block.splitlines():
+        if match := re.match(r"^([a-z-]+):\s*(.*)$", line):
+            key, value = match.groups()
+            fields[key] = "" if value in (">-", ">", "|") else value
+        elif key and line.startswith("  "):
+            fields[key] = f"{fields[key]} {line.strip()}".strip()
+    return fields
+
+
+def check_plugin(directory: Path, seen_skills: dict[str, str]) -> None:
+    name = directory.name
+    claude = load(directory / ".claude-plugin" / "plugin.json")
+    portable = load(directory / "plugin.json")
+    if portable.pop("$schema", None) != AGENT_PLUGINS_SCHEMA:
+        fail(f"plugins/{name}/plugin.json: $schema must be {AGENT_PLUGINS_SCHEMA}")
+    if claude != portable:
+        fail(f"plugins/{name}: plugin.json and .claude-plugin/plugin.json differ")
+    if claude.get("name") != name:
+        fail(f"plugins/{name}: manifest name {claude.get('name')!r} is not the directory name")
+    if not NAME.match(name):
+        fail(f"plugins/{name}: plugin name must be haci- plus lowercase kebab-case")
+
+    skills = sorted((directory / "skills").glob("*/SKILL.md"))
+    if not skills:
+        fail(f"plugins/{name}: no skills/<name>/SKILL.md")
+    for skill in skills:
+        rel = skill.relative_to(ROOT)
+        fields = frontmatter(skill)
+        skill_name = skill.parent.name
+        if fields.get("name") != skill_name:
+            fail(f"{rel}: frontmatter name {fields.get('name')!r} is not the directory name")
+        if not NAME.match(skill_name) or len(skill_name) > 64:
+            fail(f"{rel}: name must be haci- plus lowercase kebab-case, at most 64 characters")
+        description = fields.get("description", "")
+        if not description or len(description) > 1024:
+            fail(f"{rel}: description must be 1-1024 characters, is {len(description)}")
+        if skill_name in seen_skills:
+            fail(f"{rel}: skill name also used in plugin {seen_skills[skill_name]} — agents that do not prefix collide")
+        seen_skills[skill_name] = name
+
+    for doc in directory.rglob("*.md"):
+        for target in LINK.findall(doc.read_text(encoding="utf-8")):
+            if "://" in target or target.startswith("mailto:"):
+                continue
+            resolved = (doc.parent / target).resolve()
+            if not resolved.is_relative_to(directory.resolve()):
+                fail(f"{doc.relative_to(ROOT)}: link {target} leaves the plugin — name the skill or file instead")
+            elif not resolved.exists():
+                fail(f"{doc.relative_to(ROOT)}: link {target} does not resolve")
+
+
+def main() -> int:
+    claude = load(CLAUDE_MARKETPLACE)
+    codex = load(CODEX_MARKETPLACE)
+    if claude.get("name") != codex.get("name"):
+        fail("the two marketplace files carry different names")
+
+    listed_claude = {p["name"]: p["source"] for p in claude.get("plugins", [])}
+    listed_codex = {p["name"]: p["source"].get("path") for p in codex.get("plugins", [])}
+    on_disk = {d.name for d in (ROOT / "plugins").iterdir() if d.is_dir()}
+    for label, listed in (("Claude/Copilot", listed_claude), ("Codex", listed_codex)):
+        if set(listed) != on_disk:
+            fail(f"{label} marketplace lists {sorted(listed)}, plugins/ holds {sorted(on_disk)}")
+        for plugin, source in listed.items():
+            if source != f"./plugins/{plugin}":
+                fail(f"{label} marketplace: {plugin} has source {source!r}, expected ./plugins/{plugin}")
+    for entry in codex.get("plugins", []):
+        if entry.get("policy", {}).get("installation") not in {"AVAILABLE", "INSTALLED_BY_DEFAULT", "NOT_AVAILABLE"}:
+            fail(f"Codex marketplace: {entry.get('name')} has no valid policy.installation")
+
+    seen: dict[str, str] = {}
+    versions = set()
+    for directory in sorted((ROOT / "plugins").iterdir()):
+        if directory.is_dir():
+            check_plugin(directory, seen)
+            versions.add(load(directory / "plugin.json").get("version"))
+    if len(versions) > 1:
+        fail(f"plugins carry different versions {sorted(map(str, versions))}; they are released together")
+
+    for message in errors:
+        print(f"✗ {message}", file=sys.stderr)
+    if not errors:
+        print(f"✓ {len(on_disk)} plugins, {len(seen)} skills")
+    return 1 if errors else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
