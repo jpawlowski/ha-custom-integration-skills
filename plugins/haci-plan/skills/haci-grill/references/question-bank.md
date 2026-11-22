@@ -10,14 +10,14 @@ right-hand column is why it earns a turn: what breaks, or what you would otherwi
 
 Answer these from the repository, then confirm the result in one line instead of asking:
 
-| Look at                                   | Tells you                                                  |
-| ----------------------------------------- | ---------------------------------------------------------- |
-| `manifest.json`                           | `integration_type`, `iot_class`, dependencies, discovery   |
-| `custom_components/<domain>/coordinator/` | The current payload shape and update interval              |
-| The platform directories and `PLATFORMS`  | Which surfaces already exist                               |
-| `translations/en.json`, `icons.json`      | Naming conventions already in use                          |
-| the decision records' index, if any       | Choices already made, and what they oblige                 |
-| `git log --oneline -20`                   | What the developer has been working on, and in which style |
+| Look at                                  | Tells you                                                  |
+| ---------------------------------------- | ---------------------------------------------------------- |
+| `manifest.json`                          | `integration_type`, `iot_class`, dependencies, discovery   |
+| the coordinator module                   | The current payload shape and update interval              |
+| The platform directories and `PLATFORMS` | Which surfaces already exist                               |
+| `translations/en.json`, `icons.json`     | Naming conventions already in use                          |
+| the decision records' index, if any      | Choices already made, and what they oblige                 |
+| `git log --oneline -20`                  | What the developer has been working on, and in which style |
 
 If the project's `AGENTS.md` says the repository still needs a one-time setup — a template not yet initialised — settle
 that before anything else.
@@ -123,19 +123,19 @@ apply rather than forcing the integration into one of them.
 
 ## 2. A new platform or entity in an existing integration
 
-| Decision                                                             | Why it earns a turn                                                           |
-| -------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Which coordinator field backs it, exactly                            | If none does, this is a coordinator change first                              |
-| Entity, attribute of an existing entity, or diagnostic               | Decides `entity_category` and whether it belongs at all                       |
-| Enabled by default, or `entity_registry_enabled_default=False`       | Ten noisy diagnostics per device is a complaint, not a feature                |
-| Device class, state class, unit                                      | Wrong ones break statistics and are breaking to correct                       |
-| Which device does it belong to, in a multi-device setup              | Every device has exactly one owning config entry                              |
-| What its state is before the first successful refresh                | `unknown` versus `unavailable` is user-visible                                |
-| For a writable entity: what the API does with an invalid value       | Validation and the error the user gets                                        |
-| Does the value exist on every model, firmware or plan tier           | Whether the entity is created conditionally                                   |
-| Will people show it on a dashboard, use it in an automation, or both | State versus attribute, and what goes beside the state (`ha-user-experience`) |
-| Would anyone want an automation to start when this changes           | Then it is a state, not an attribute                                          |
-| For a fixed set of values: is there an order ("low" < "high")        | An ordinal beside the state lets automations compare                          |
+| Decision                                                             | Why it earns a turn                                            |
+| -------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Which coordinator field backs it, exactly                            | If none does, this is a coordinator change first               |
+| Entity, attribute of an existing entity, or diagnostic               | Decides `entity_category` and whether it belongs at all        |
+| Enabled by default, or `entity_registry_enabled_default=False`       | Ten noisy diagnostics per device is a complaint, not a feature |
+| Device class, state class, unit                                      | Wrong ones break statistics and are breaking to correct        |
+| Which device does it belong to, in a multi-device setup              | Every device has exactly one owning config entry               |
+| What its state is before the first successful refresh                | `unknown` versus `unavailable` is user-visible                 |
+| For a writable entity: what the API does with an invalid value       | Validation and the error the user gets                         |
+| Does the value exist on every model, firmware or plan tier           | Whether the entity is created conditionally                    |
+| Will people show it on a dashboard, use it in an automation, or both | State versus attribute, and what goes beside the state         |
+| Would anyone want an automation to start when this changes           | Then it is a state, not an attribute                           |
+| For a fixed set of values: is there an order ("low" < "high")        | An ordinal beside the state lets automations compare           |
 
 ## 3. A new service action
 
@@ -162,7 +162,7 @@ apply rather than forcing the integration into one of them.
 
 ## 5. Anything that reaches installs which already exist
 
-Ask before implementing, not in the pull request (`ha-breaking-changes`):
+Ask before implementing, not in the pull request:
 
 | Decision                                                    | Why it earns a turn                                      |
 | ----------------------------------------------------------- | -------------------------------------------------------- |
@@ -202,7 +202,7 @@ here decides how much of the import is affordable at all.
 
 | Decision                                                                | Why it earns a turn                                            |
 | ----------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Which template, if any — the upstream one, a cookiecutter, hand-written | Predicts the patterns you will meet in `legacy-patterns.md`    |
+| Which template, if any — the upstream one, a cookiecutter, hand-written | Predicts the legacy patterns you will meet                     |
 | Open pull requests, or long-lived branches                              | The restructure phase invalidates every one of them            |
 | Is anyone else committing to it right now                               | File moves turn their next merge into a manual reconstruction  |
 | The oldest Home Assistant version that must keep working                | Bounds which modern APIs are even available to you             |

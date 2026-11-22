@@ -42,7 +42,7 @@ what a change must agree with lives.
 6. **A literal where a recorded value belongs, or the environment deciding.** A hard-coded port, path, domain or name
    the repository records elsewhere.
 7. **An identity key that is not unique or not stable.** Can two objects share it, or one object change it? A unique ID
-   built from an IP address, a hostname or a name the user chose is this case.
+   built from an IP address, a hostname, a URL, an email address, a username or a name the user chose is this case.
 8. **Untrusted data or a secret reaching a command, a log line or diagnostics.**
 9. **Stored state never revisited.** Config entries, the registries or files an earlier version wrote: does the change
    still read them, and does anything migrate what it no longer writes?

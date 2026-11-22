@@ -79,8 +79,9 @@ finding.
 
 ## 2. Run the gates again
 
-The project's lint, type-check and test commands, plus whatever else the change calls for. Step 1 edits code and can
-change behaviour, so the tests have to pass on what it left, and the reviewer should not spend its reading on what a
+The project's lint, type-check and test commands, plus whatever else the change calls for. Where `AGENTS.md` names none,
+run what the project's CI runs on a pull request; where that is unclear too, ask rather than skip. Step 1 edits code and
+can change behaviour, so the tests have to pass on what it left, and the reviewer should not spend its reading on what a
 gate already reports. A pre-push gate that runs no tests does not count as this step.
 
 Where the gates already passed on this tree and step 1 changed nothing, that run is step 2. A red gate is fixed and step

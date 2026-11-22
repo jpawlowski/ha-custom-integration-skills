@@ -104,8 +104,14 @@ hard to reverse, a genuine trade-off rather than the one sensible option, and su
 record is the `BREAKING CHANGE:` footer.
 
 Where the project keeps decision records, it owns their place and format — its `AGENTS.md` says where — and the index is
-read before a choice that is hard to reverse, so a new decision does not silently contradict an old one. Where the
-project keeps none, put the decision in the plan's **Approach** and offer a home for it rather than creating one.
+read before a choice that is hard to reverse, so a new decision does not silently contradict an old one. Where it
+documents no format, one file per decision: context, the decision, the alternatives and why they lost, and the
+consequences.
+
+**A record is not edited once it lands**, whatever the format: it is the reasoning as it stood that day. Superseding it
+is a new record that names the old one, and the old one gets nothing but its status changed to superseded, with a link
+to the new one. Where the project keeps none, put the decision in the plan's **Approach** and offer a home for it rather
+than creating one.
 
 ## Handoff
 

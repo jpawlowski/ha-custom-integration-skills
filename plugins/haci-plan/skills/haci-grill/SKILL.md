@@ -18,9 +18,8 @@ An agent that builds exactly what was asked builds the wrong thing surprisingly 
 decision tree, and every branch left unasked gets guessed.
 
 Here the guesses are expensive in a specific way: unique IDs, entity IDs, `entry.data` and the coordinator's data shape
-reach users with the first release and are breaking to change afterwards (`ha-breaking-changes`). A question costs a
-minute now; the same question answered by a migration costs a release. **Interrogate first — that is the whole point of
-this skill.**
+reach users with the first release and are breaking to change afterwards. A question costs a minute now; the same
+question answered by a migration costs a release. **Interrogate first — that is the whole point of this skill.**
 
 ## When to run it
 
@@ -31,7 +30,7 @@ this skill.**
 | First real feature after an import or migration                      | **Yes** — the imported code answers less than it looks like                                           |
 | A new platform, entity set, service action or flow step              | Yes, once more than two or three decisions are open                                                   |
 | A one-line request whose scope you cannot state back in one sentence | Yes                                                                                                   |
-| A bug with a known cause                                             | No — debug it (`ha-coordinator-debug`)                                                                |
+| A bug with a known cause                                             | No — debug it                                                                                         |
 | A complete spec is already on the table                              | No. Say so, name the two or three real gaps, ask only those.                                          |
 
 Do not run it as a ritual. If nothing you could ask would change a file, you are stalling, not scoping.

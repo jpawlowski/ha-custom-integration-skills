@@ -17,6 +17,7 @@ CLAUDE_MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 CODEX_MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 AGENT_PLUGINS_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
 NAME = re.compile(r"^haci-[a-z0-9]+(-[a-z0-9]+)*$")
+FOREIGN_SKILL = re.compile(r"`((?:ha|blueprint)-[a-z]+(?:-[a-z]+)*)`")
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
 
 errors: list[str] = []
@@ -82,7 +83,10 @@ def check_plugin(directory: Path, seen_skills: dict[str, str]) -> None:
         seen_skills[skill_name] = name
 
     for doc in directory.rglob("*.md"):
-        for target in LINK.findall(doc.read_text(encoding="utf-8")):
+        text = doc.read_text(encoding="utf-8")
+        for foreign in sorted(set(FOREIGN_SKILL.findall(text))):
+            fail(f"{doc.relative_to(ROOT)}: names {foreign}, a skill this marketplace does not ship — describe the task")
+        for target in LINK.findall(text):
             if "://" in target or target.startswith("mailto:"):
                 continue
             resolved = (doc.parent / target).resolve()
@@ -99,7 +103,10 @@ def main() -> int:
         fail("the two marketplace files carry different names")
 
     listed_claude = {p["name"]: p["source"] for p in claude.get("plugins", [])}
-    listed_codex = {p["name"]: p["source"].get("path") for p in codex.get("plugins", [])}
+    listed_codex = {
+        p["name"]: p["source"] if isinstance(p["source"], str) else p["source"].get("path")
+        for p in codex.get("plugins", [])
+    }
     on_disk = {d.name for d in (ROOT / "plugins").iterdir() if d.is_dir()}
     for label, listed in (("Claude/Copilot", listed_claude), ("Codex", listed_codex)):
         if set(listed) != on_disk:
