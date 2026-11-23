@@ -4,11 +4,11 @@ description: >-
   Review a change before it is committed and before its pull request leaves draft — simplify it, run the gates again,
   then have a context that did not write it review it, and on risk a second model of another family. Use when asked to
   "review my changes", "review this before I commit", "check the diff", "is this ready to merge", "get a second
-  opinion", "run /simplify", before the first commit of a change, or before `gh pr ready`. Covers the step order and
-  why, what the fresh reviewer gets, critical files, turning findings into one fix, the second review, and reporting
-  what ran. SYMPTOMS — load this if you are about to: review a change in the session that wrote it; hand the reviewer
-  your reasoning or the pull request description; start the review before the tests ran on the simplified code; or
-  record an agent's review as human review.
+  opinion", "run /simplify", before a push, or before `gh pr ready`. Covers the step order and why, what the fresh
+  reviewer gets, critical files, turning findings into one fix, the second review, and reporting what ran. SYMPTOMS —
+  load this if you are about to: review a change in the session that wrote it; hand the reviewer your reasoning or the
+  pull request description; start the review before the tests ran on the simplified code; or record an agent's review as
+  human review.
 ---
 
 # Review a change before it lands
@@ -28,10 +28,14 @@ commands, the default branch and any critical files of its own. Where it names t
 
 ## When the pass runs, and over what
 
-| Moment                                               | Range                                                                                              |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Before the first commit of a change, made or offered | the working tree against the merge base with the default branch                                    |
-| Before `gh pr ready`                                 | the commits after the last one with an `Agent-Review:` trailer; the whole branch when none has one |
+| Moment                                                     | Range                                                                                              |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Before a push, and before `gh pr ready`                    | the commits after the last one with an `Agent-Review:` trailer; the whole branch when none has one |
+| Only when the developer asks, before anything is committed | the working tree against the merge base with the default branch                                    |
+
+**Commits in between need no pass of their own.** Commit as often as the work calls for; one pass before the push covers
+every commit since the last reviewed one. A push with nothing unreviewed in it needs no pass. A push to a draft pull
+request may wait: the pass before `gh pr ready` then covers everything since.
 
 `main` below stands for the default branch. Give the range as full SHAs — `git fetch origin main` and then
 `git merge-base origin/main HEAD` for the base, since a local `main` can be stale or absent — so nothing that happens
@@ -114,7 +118,7 @@ already checked.
 3. **Fix pass.** Give the fix alone and every finding it answers to the reviewer that found them — continued where the
    tool can continue it, fresh with the brief otherwise. Rework after a review is hastier than the first draft.
 4. **Three passes at most.** A P0 or P1 still open after the third goes to the developer with one line on its impact,
-   and the commit or `gh pr ready` waits for their word.
+   and the push or `gh pr ready` waits for their word.
 
 ## 5. A second review on another model family
 
@@ -132,14 +136,16 @@ Where the project's `AGENTS.md` names a command for it, run that, with this skil
 [`references/reviewer-brief.md`](references/reviewer-brief.md) as the brief. Such a command should run another installed
 agent CLI on an export of the committed head outside any checkout, to read and to run and write nothing.
 
-Without one — or before the first commit, since it reviews commits — a fresh session of another family with the same
+Without one — or for a working-tree pass, since it reviews commits — a fresh session of another family with the same
 brief and range does the same. A different CLI is not yet a different family — Copilot and OpenCode can run Claude
 models — so name the model where the CLI's default may be the author's.
 
 ## 6. Say what ran
 
 - In chat: which steps ran, on which range, and which did not and why.
-- In the commit that ends a pass — the first commit after a working-tree pass, or the last fix commit — a trailer
-  `Agent-Review: <the steps that ran>`. It marks that commit itself as covered, which is where the next pass starts.
+- In the commit that ends a pass, a trailer `Agent-Review: <the steps that ran>`. It marks that commit itself as
+  covered, which is where the next pass starts. That is the last fix commit; with no fix, amend the trailer into the
+  last commit of the range while it is unpushed. A pushed commit is never rewritten for it — an empty commit carries the
+  trailer instead. After a working-tree pass, it is the first commit.
 - In the pull request, where its template has a verification section, the agent review is named there. It is never
   written as human review: an agent's review is not a person's.
