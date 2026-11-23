@@ -142,15 +142,15 @@ they leave open, these defaults hold — and the first one holds in every case:
 5. **Gate once.** Run the project's check-mode gate (its check-mode lint, type-check and spell-check, as `AGENTS.md`
    names them; where it names none, the commands the project's CI runs, and where those are unclear, ask) redirected to
    a log, judged by its exit code. Read the log, and only the failing part, on a non-zero exit; iterate on just the
-   failing piece, then re-run the full gate once more before moving on. Then run the review pass in `haci-change-review`
-   (the `haci-review` plugin; where it is off, the project's own review step) on the fix. When the gate runs no tests,
-   the review's step 2 is the project's test command on top of it, and the full gate again whenever simplifying or
-   `/code-review --fix` changed files.
+   failing piece, then re-run the full gate once more before moving on.
 6. **Commit** using Conventional Commits (the project's commit message rules). **No manual version bump** where the
    project's release tooling derives it from the commit type, as release-please does.
-7. **Push and open the PR** (`gh pr create`, following `.github/pull_request_template.md` if the repo has one). Open it
-   ready for review, not as a draft: the gate above already passed, and where CI skips drafts, a draft would leave the
-   next step waiting for checks that never start.
+7. **Review, push and open the PR.** Before the push, run the review pass in `haci-change-review` (the `haci-review`
+   plugin; where it is off, the project's own review step) over the fix commits. When the gate runs no tests, the
+   review's step 2 is the project's test command on top of it, and the full gate again whenever simplifying or
+   `/code-review --fix` changed files. Then push and open the PR (`gh pr create`, following
+   `.github/pull_request_template.md` if the repo has one). Open it ready for review, not as a draft: the gate above
+   already passed, and where CI skips drafts, a draft would leave the next step waiting for checks that never start.
 8. **Wait for CI:** `gh pr checks --watch --fail-fast`.
    - Red → do not merge. Fix it and push again, watch again — or stop and report if it isn't yours to fix.
    - Green → continue.

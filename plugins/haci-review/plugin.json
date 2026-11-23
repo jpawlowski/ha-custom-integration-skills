@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "haci-review",
   "version": "0.2.0",
-  "description": "Review a change before it is committed: simplify, rerun the gates, then a reviewer that did not write it.",
+  "description": "Review a branch before it is pushed: simplify, rerun the gates, then a reviewer that did not write it.",
   "author": {
     "name": "Julian Pawlowski",
     "url": "https://github.com/jpawlowski"

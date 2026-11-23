@@ -37,5 +37,7 @@ release that changes what a skill expects from a project — a new `AGENTS.md` e
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/); never commit or push without an explicit
 request.
 
-A skill that grants autonomy — merging, posting, acting without asking — sets `disable-model-invocation: true` **and**
-says in its description that it loads only when the developer invokes it, because not every agent honours the flag.
+A skill that grants autonomy — merging, posting, acting without asking — sets `disable-model-invocation: true` (Claude
+Code), ships `agents/openai.yaml` with `policy: allow_implicit_invocation: false` (Codex), **and** says in its
+description that it loads only when the developer invokes it, for agents that know neither. `script/check` holds the
+first two together.

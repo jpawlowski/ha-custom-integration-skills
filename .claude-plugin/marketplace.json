@@ -16,7 +16,7 @@
     {
       "name": "haci-review",
       "source": "./plugins/haci-review",
-      "description": "Review a change before it is committed: simplify, rerun the gates, then a reviewer that did not write it."
+      "description": "Review a branch before it is pushed: simplify, rerun the gates, then a reviewer that did not write it."
     },
     {
       "name": "haci-triage",

@@ -51,6 +51,25 @@ def frontmatter(path: Path) -> dict[str, str]:
     return fields
 
 
+def implicit_invocation(path: Path) -> bool | None:
+    """The value of policy.allow_implicit_invocation in a Codex agents/openai.yaml; None when absent or unreadable."""
+    if not path.is_file():
+        return None
+    in_policy = False
+    value = None
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.split("#", 1)[0].rstrip()
+        if not line.strip():
+            continue
+        if not line.startswith((" ", "\t")):
+            in_policy = line == "policy:"
+            continue
+        key, _, rest = line.strip().partition(":")
+        if in_policy and key == "allow_implicit_invocation":
+            value = {"true": True, "false": False}.get(rest.strip().lower())
+    return value
+
+
 def check_plugin(directory: Path, seen_skills: dict[str, str]) -> None:
     name = directory.name
     claude = load(directory / ".claude-plugin" / "plugin.json")
@@ -78,6 +97,13 @@ def check_plugin(directory: Path, seen_skills: dict[str, str]) -> None:
         description = fields.get("description", "")
         if not description or len(description) > 1024:
             fail(f"{rel}: description must be 1-1024 characters, is {len(description)}")
+        claude_blocked = fields.get("disable-model-invocation") == "true"
+        codex_blocked = implicit_invocation(skill.parent / "agents" / "openai.yaml") is False
+        if claude_blocked and not codex_blocked:
+            fail(f"{rel}: invoke-only for Claude Code, but Codex may still load it — add agents/openai.yaml with "
+                 "policy: allow_implicit_invocation: false")
+        elif codex_blocked and not claude_blocked:
+            fail(f"{rel}: invoke-only for Codex, but Claude Code may still load it — add disable-model-invocation: true")
         if skill_name in seen_skills:
             fail(f"{rel}: skill name also used in plugin {seen_skills[skill_name]} — agents that do not prefix collide")
         seen_skills[skill_name] = name
