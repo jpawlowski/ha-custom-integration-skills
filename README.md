@@ -7,11 +7,11 @@ This is a community project. It is not affiliated with Home Assistant, HACS or t
 
 ## Plugins
 
-| Plugin        | Skills                                     | Default   | What it does                                                                        |
-| ------------- | ------------------------------------------ | --------- | ----------------------------------------------------------------------------------- |
-| `haci-plan`   | `haci-grill`, `haci-planning`              | on        | Interviews you until a change's requirements are settled, then plans large changes. |
-| `haci-review` | `haci-change-review`                       | on        | Simplifies a change, reruns the gates, and has a fresh context review it.           |
-| `haci-triage` | `haci-issue-triage`, the `/issues` command | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.   |
+| Plugin        | Skills                             | Default   | What it does                                                                        |
+| ------------- | ---------------------------------- | --------- | ----------------------------------------------------------------------------------- |
+| `haci-plan`   | `haci-grill`, `haci-planning`      | on        | Interviews you until a change's requirements are settled, then plans large changes. |
+| `haci-review` | `haci-change-review`               | on        | Simplifies a change, reruns the gates, and has a fresh context review it.           |
+| `haci-triage` | `haci-issue-triage`, `haci-issues` | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.   |
 
 ## What the skills read from your project
 

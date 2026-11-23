@@ -4,12 +4,12 @@ description: >-
   Work through a backlog of GitHub issues on this repository — categorize, then walk bugs and feature requests one at a
   time, fixing approved ones on a branch through a pull request instead of committing straight to main. Use when asked
   to "triage my issues", "go through the issue backlog", "work through the issues", "let's triage", or invoked via the
-  `/issues` command. This is opt-in tooling for backlog work, not a replacement for the normal ad-hoc flow in AGENTS.md
-  — a single "fix this bug" request in conversation still goes through that flow, not this one. SYMPTOMS — load this if
-  you are about to: fix several issues in a row by committing each straight to main with nobody reviewing between
-  commits; dump the whole backlog in one message instead of walking it one issue at a time; merge a pull request this
-  flow opened without either explicit confirmation or an explicit full-autonomy invocation; bump a version by hand; or
-  skip the breaking-changes warn-first check on an issue fix that needs it.
+  `haci-issues` skill. This is opt-in tooling for backlog work, not a replacement for the normal ad-hoc flow in
+  AGENTS.md — a single "fix this bug" request in conversation still goes through that flow, not this one. SYMPTOMS —
+  load this if you are about to: fix several issues in a row by committing each straight to main with nobody reviewing
+  between commits; dump the whole backlog in one message instead of walking it one issue at a time; merge a pull request
+  this flow opened without either explicit confirmation or an explicit full-autonomy invocation; bump a version by hand;
+  or skip the breaking-changes warn-first check on an issue fix that needs it.
 ---
 
 # Issue triage and branch/PR-based fixing
@@ -27,7 +27,7 @@ shared-state, hard-to-reverse action, and a backlog run touches several of them 
 
 Skip that per-PR confirmation, and merge automatically on green CI, only when this session was entered through a
 dedicated entry point built for full autonomy — a command that exists specifically to invoke this flow (such as
-`/issues`, if your client offers slash commands), or an explicit instruction scoped to the session ("auto-merge these",
+`haci-issues`, which only the developer invokes), or an explicit instruction scoped to the session ("auto-merge these",
 "don't ask me each time today"). Ad-hoc conversational use of this skill — "hey, can you triage my issues" — always
 asks. State which mode you're in once, at the start of a run, rather than leaving it implicit.
 

@@ -12,7 +12,6 @@ repository, whatever template or layout it started from. Short form: **haci** (H
 | `plugins/<p>/plugin.json`                | Copilot CLI, VS Code, Codex (Agent Plugins 1.0)                    |
 | `plugins/<p>/.claude-plugin/plugin.json` | Claude Code — same content as `plugin.json` without `$schema`      |
 | `plugins/<p>/skills/<s>/SKILL.md`        | every agent ([Agent Skills](https://agentskills.io/specification)) |
-| `plugins/<p>/commands/`                  | Claude Code only                                                   |
 
 `script/check` verifies that these agree; CI runs it.
 
@@ -37,3 +36,6 @@ release that changes what a skill expects from a project — a new `AGENTS.md` e
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/); never commit or push without an explicit
 request.
+
+A skill that grants autonomy — merging, posting, acting without asking — sets `disable-model-invocation: true` **and**
+says in its description that it loads only when the developer invokes it, because not every agent honours the flag.
