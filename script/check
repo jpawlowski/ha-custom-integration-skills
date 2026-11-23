@@ -70,6 +70,21 @@ def implicit_invocation(path: Path) -> bool | None:
     return value
 
 
+def check_rules(path: Path) -> None:
+    """A rules.md is copied verbatim into projects as a path-scoped instructions file, so it must stand alone there."""
+    rel = path.relative_to(ROOT)
+    text = path.read_text(encoding="utf-8")
+    fields = frontmatter(path)
+    if set(fields) != {"name", "description"} or not all(fields.values()):
+        fail(f"{rel}: frontmatter must hold exactly a non-empty name and description — projects add the paths")
+    body = text[text.find("\n---", 4) + 4 :].lstrip("\n") if text.startswith("---\n") else ""
+    if not body.startswith("# "):
+        fail(f"{rel}: the body must open with a # heading right after the frontmatter")
+    for target in LINK.findall(text):
+        if "://" not in target:
+            fail(f"{rel}: relative link {target} breaks once the file is copied into a project — use an absolute URL")
+
+
 def check_plugin(directory: Path, seen_skills: dict[str, str]) -> None:
     name = directory.name
     claude = load(directory / ".claude-plugin" / "plugin.json")
@@ -107,6 +122,9 @@ def check_plugin(directory: Path, seen_skills: dict[str, str]) -> None:
         if skill_name in seen_skills:
             fail(f"{rel}: skill name also used in plugin {seen_skills[skill_name]} — agents that do not prefix collide")
         seen_skills[skill_name] = name
+
+    for rules in sorted((directory / "skills").glob("*/references/rules.md")):
+        check_rules(rules)
 
     for doc in directory.rglob("*.md"):
         text = doc.read_text(encoding="utf-8")

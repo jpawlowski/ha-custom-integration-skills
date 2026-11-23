@@ -1,17 +1,18 @@
 # HA Custom Integration skills (haci)
 
-Agent skills for developers of Home Assistant custom integrations: working habits an agent follows on top of your
-project's own rules. They come as plugins, and each plugin can be turned on and off on its own.
+Agent skills for developers of Home Assistant custom integrations: Home Assistant knowledge and working habits an
+agent follows on top of your project's own rules. They come as plugins, and each plugin can be turned on and off on its own.
 
 This is a community project. It is not affiliated with Home Assistant, HACS or the Open Home Foundation.
 
 ## Plugins
 
-| Plugin        | Skills                             | Default   | What it does                                                                        |
-| ------------- | ---------------------------------- | --------- | ----------------------------------------------------------------------------------- |
-| `haci-plan`   | `haci-grill`, `haci-planning`      | on        | Interviews you until a change's requirements are settled, then plans large changes. |
-| `haci-review` | `haci-change-review`               | on        | Simplifies a change, reruns the gates, and has a fresh context review it.           |
-| `haci-triage` | `haci-issue-triage`, `haci-issues` | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.   |
+| Plugin         | Skills                             | Default   | What it does                                                                         |
+| -------------- | ---------------------------------- | --------- | ------------------------------------------------------------------------------------ |
+| `haci-plan`    | `haci-grill`, `haci-planning`      | on        | Interviews you until a change's requirements are settled, then plans large changes.  |
+| `haci-review`  | `haci-change-review`               | on        | Simplifies a change, reruns the gates, and has a fresh context review it.            |
+| `haci-quality` | `haci-testing`                     | on        | Writes and repairs tests with `pytest-homeassistant`: fixtures, patterns, snapshots. |
+| `haci-triage`  | `haci-issue-triage`, `haci-issues` | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.    |
 
 ## What the skills read from your project
 
@@ -26,9 +27,17 @@ The skills assume no template and no layout. They take the specifics from your `
 | a gitignored directory for working notes           | `haci-grill`, `haci-planning`             |
 | where decision records live                        | `haci-grill`, `haci-planning`             |
 | what counts as a breaking change, and how to warn  | `haci-issue-triage`, `haci-grill`         |
+| the test command and the shared test fixtures      | `haci-testing`                            |
 
 [ha-integration-blueprint](https://github.com/jpawlowski/ha-integration-blueprint) is one template that names all of
 them and enables the default plugins for you.
+
+## Rules files
+
+A skill that comes with rules keeps them in `references/rules.md`: frontmatter with a `name` and a `description`, then
+plain Markdown with no relative links. A project can copy the file into its own path-scoped instructions — for Copilot
+and VS Code `applyTo`, for Claude Code `paths` — so the rules load whenever an agent opens a matching file, even
+without the skill. Copy it at the tag you pin, and copy it again when the pin moves.
 
 ## Installing
 

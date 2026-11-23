@@ -19,6 +19,11 @@
       "description": "Review a branch before it is pushed: simplify, rerun the gates, then a reviewer that did not write it."
     },
     {
+      "name": "haci-quality",
+      "source": "./plugins/haci-quality",
+      "description": "Home Assistant testing knowledge: pytest-homeassistant patterns, fixtures, snapshots and the rules a test follows."
+    },
+    {
       "name": "haci-triage",
       "source": "./plugins/haci-triage",
       "description": "Work through a backlog of GitHub issues one at a time, each fix on its own branch and pull request."
