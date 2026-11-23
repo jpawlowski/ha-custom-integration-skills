@@ -1,6 +1,6 @@
 {
   "name": "haci-review",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Review a change before it is committed: simplify, rerun the gates, then a reviewer that did not write it.",
   "author": {
     "name": "Julian Pawlowski",
