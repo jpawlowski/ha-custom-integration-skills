@@ -1,6 +1,6 @@
 {
   "name": "haci-quality",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Home Assistant testing knowledge: pytest-homeassistant patterns, fixtures, snapshots and the rules a test follows.",
   "author": {
     "name": "Julian Pawlowski",

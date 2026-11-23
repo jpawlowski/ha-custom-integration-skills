@@ -1,6 +1,6 @@
 {
   "name": "haci-triage",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Work through a backlog of GitHub issues one at a time, each fix on its own branch and pull request.",
   "author": {
     "name": "Julian Pawlowski",

@@ -1,6 +1,6 @@
 {
   "name": "haci-plan",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Settle requirements before code: interview the developer, then plan large changes in phases.",
   "author": {
     "name": "Julian Pawlowski",
