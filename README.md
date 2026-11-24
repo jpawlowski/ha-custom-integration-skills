@@ -7,27 +7,29 @@ This is a community project. It is not affiliated with Home Assistant, HACS or t
 
 ## Plugins
 
-| Plugin         | Skills                             | Default   | What it does                                                                         |
-| -------------- | ---------------------------------- | --------- | ------------------------------------------------------------------------------------ |
-| `haci-plan`    | `haci-grill`, `haci-planning`      | on        | Interviews you until a change's requirements are settled, then plans large changes.  |
-| `haci-review`  | `haci-change-review`               | on        | Simplifies a change, reruns the gates, and has a fresh context review it.            |
-| `haci-quality` | `haci-testing`                     | on        | Writes and repairs tests with `pytest-homeassistant`: fixtures, patterns, snapshots. |
-| `haci-triage`  | `haci-issue-triage`, `haci-issues` | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.    |
+| Plugin         | Skills                                                                             | Default   | What it does                                                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `haci-plan`    | `haci-grill`, `haci-planning`                                                      | on        | Interviews you until a change's requirements are settled, then plans large changes.                                                                |
+| `haci-review`  | `haci-change-review`                                                               | on        | Simplifies a change, reruns the gates, and has a fresh context review it.                                                                          |
+| `haci-quality` | `haci-testing`, `haci-modern-apis`, `haci-breaking-changes`, `haci-quality-review` | on        | Tests with `pytest-homeassistant`; current APIs instead of deprecated ones; breaking changes, migrations and repair issues; a Quality Scale audit. |
+| `haci-triage`  | `haci-issue-triage`, `haci-issues`                                                 | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.                                                                  |
 
 ## What the skills read from your project
 
 The skills assume no template and no layout. They take the specifics from your `AGENTS.md` (or `CLAUDE.md`,
 `CONTRIBUTING.md`) and fall back to a sensible default where it says nothing:
 
-| Name it in `AGENTS.md`                             | Used by                                   |
-| -------------------------------------------------- | ----------------------------------------- |
-| lint, type-check and test commands                 | `haci-change-review`, `haci-issue-triage` |
-| files where a miss is expensive (critical files)   | `haci-change-review`                      |
-| a command for a second review by another agent CLI | `haci-change-review`                      |
-| a gitignored directory for working notes           | `haci-grill`, `haci-planning`             |
-| where decision records live                        | `haci-grill`, `haci-planning`             |
-| what counts as a breaking change, and how to warn  | `haci-issue-triage`, `haci-grill`         |
-| the test command and the shared test fixtures      | `haci-testing`                            |
+| Name it in `AGENTS.md`                             | Used by                                                    |
+| -------------------------------------------------- | ---------------------------------------------------------- |
+| lint, type-check and test commands                 | `haci-change-review`, `haci-issue-triage`                  |
+| files where a miss is expensive (critical files)   | `haci-change-review`                                       |
+| a command for a second review by another agent CLI | `haci-change-review`                                       |
+| a gitignored directory for working notes           | `haci-grill`, `haci-planning`                              |
+| where decision records live                        | `haci-grill`, `haci-planning`                              |
+| what counts as a breaking change, and how to warn  | `haci-breaking-changes`, `haci-issue-triage`, `haci-grill` |
+| the test command and the shared test fixtures      | `haci-testing`                                             |
+| the gates, the package layout and the target tier  | `haci-quality-review`                                      |
+| the virtualenv Home Assistant is installed in      | `haci-modern-apis`                                         |
 
 [ha-integration-blueprint](https://github.com/jpawlowski/ha-integration-blueprint) is one template that names all of
 them and enables the default plugins for you.

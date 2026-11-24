@@ -21,7 +21,7 @@
     {
       "name": "haci-quality",
       "source": "./plugins/haci-quality",
-      "description": "Home Assistant testing knowledge: pytest-homeassistant patterns, fixtures, snapshots and the rules a test follows."
+      "description": "Home Assistant quality knowledge: tests, current APIs and deprecations, breaking changes and repairs, and the Quality Scale review."
     },
     {
       "name": "haci-triage",
