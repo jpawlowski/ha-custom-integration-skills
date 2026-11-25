@@ -29,10 +29,34 @@
       "category": "Coding"
     },
     {
+      "name": "haci-build",
+      "source": {
+        "source": "local",
+        "path": "./plugins/haci-build"
+      },
+      "policy": {
+        "installation": "INSTALLED_BY_DEFAULT",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Coding"
+    },
+    {
       "name": "haci-quality",
       "source": {
         "source": "local",
         "path": "./plugins/haci-quality"
+      },
+      "policy": {
+        "installation": "INSTALLED_BY_DEFAULT",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Coding"
+    },
+    {
+      "name": "haci-publish",
+      "source": {
+        "source": "local",
+        "path": "./plugins/haci-publish"
       },
       "policy": {
         "installation": "INSTALLED_BY_DEFAULT",

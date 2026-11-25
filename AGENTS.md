@@ -28,7 +28,8 @@ after cloning), which also refuses a dirty worktree and any ref other than the c
   repositories.
 - **A plugin is a unit someone turns off.** Group skills by what a developer would reject together, not by topic. A
   plugin that needs another names it and says what happens without it.
-- **A skill's rules live in `references/rules.md`**, which projects copy into their path-scoped instructions. It holds
+- **A skill's rules live in `references/rules.md`** (and `references/rules.<topic>.md` when one skill governs files of
+  several kinds), which projects copy into their path-scoped instructions. It holds
   rules only, no procedure; its frontmatter is a `name` and a `description` and nothing else, and it has no relative
   link, because it is read outside the plugin. `script/check` enforces the format.
 - Never name anything so it suggests an official Home Assistant or HACS project.

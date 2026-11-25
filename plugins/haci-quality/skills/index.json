@@ -1,0 +1,40 @@
+{
+  "skills": [
+    {
+      "name": "haci-breaking-changes",
+      "version": "2316977da6d7132f",
+      "files": [
+        "SKILL.md",
+        "references/recipes.md",
+        "references/rules.md"
+      ]
+    },
+    {
+      "name": "haci-modern-apis",
+      "version": "5038fdc5143cc50a",
+      "files": [
+        "SKILL.md",
+        "references/deprecations.md",
+        "references/device-registry.md"
+      ]
+    },
+    {
+      "name": "haci-quality-review",
+      "version": "c5a43ea0179e2136",
+      "files": [
+        "SKILL.md",
+        "references/core-lint-checks.md",
+        "references/quality-scale-rules.md"
+      ]
+    },
+    {
+      "name": "haci-testing",
+      "version": "a9b6137251413ed4",
+      "files": [
+        "SKILL.md",
+        "references/recipes.md",
+        "references/rules.md"
+      ]
+    }
+  ]
+}

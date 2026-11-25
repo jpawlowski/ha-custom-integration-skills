@@ -7,12 +7,14 @@ This is a community project. It is not affiliated with Home Assistant, HACS or t
 
 ## Plugins
 
-| Plugin         | Skills                                                                             | Default   | What it does                                                                                                                                       |
-| -------------- | ---------------------------------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `haci-plan`    | `haci-grill`, `haci-planning`                                                      | on        | Interviews you until a change's requirements are settled, then plans large changes.                                                                |
-| `haci-review`  | `haci-change-review`                                                               | on        | Simplifies a change, reruns the gates, and has a fresh context review it.                                                                          |
-| `haci-quality` | `haci-testing`, `haci-modern-apis`, `haci-breaking-changes`, `haci-quality-review` | on        | Tests with `pytest-homeassistant`; current APIs instead of deprecated ones; breaking changes, migrations and repair issues; a Quality Scale audit. |
-| `haci-triage`  | `haci-issue-triage`, `haci-issues`                                                 | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.                                                                  |
+| Plugin         | Skills                                                                                                                                   | Default   | What it does                                                                                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `haci-plan`    | `haci-grill`, `haci-planning`                                                                                                            | on        | Interviews you until a change's requirements are settled, then plans large changes.                                                                                                |
+| `haci-review`  | `haci-change-review`                                                                                                                     | on        | Simplifies a change, reruns the gates, and has a fresh context review it.                                                                                                          |
+| `haci-quality` | `haci-testing`, `haci-modern-apis`, `haci-breaking-changes`, `haci-quality-review`                                                       | on        | Tests with `pytest-homeassistant`; current APIs instead of deprecated ones; breaking changes, migrations and repair issues; a Quality Scale audit.                                 |
+| `haci-build`   | `haci-entity-platform`, `haci-service-action`, `haci-config-flow`, `haci-translations`, `haci-user-experience`, `haci-coordinator-debug` | on        | Entities and platforms, service actions, triggers and conditions, config flows and the manifest, translations, what users see, the coordinator, diagnostics and runtime debugging. |
+| `haci-publish` | `haci-marketplace`                                                                                                                       | on        | Publishing through HACS and the Marketplace: `hacs.json`, release assets, brand images, the catalog pull request.                                                                  |
+| `haci-triage`  | `haci-issue-triage`, `haci-issues`                                                                                                       | available | Works through a GitHub issue backlog one issue at a time, each fix in its own PR.                                                                                                  |
 
 ## What the skills read from your project
 
@@ -30,13 +32,17 @@ The skills assume no template and no layout. They take the specifics from your `
 | the test command and the shared test fixtures      | `haci-testing`                                             |
 | the gates, the package layout and the target tier  | `haci-quality-review`                                      |
 | the virtualenv Home Assistant is installed in      | `haci-modern-apis`                                         |
+| the package layout and the class prefix            | the `haci-build` skills                                    |
+| the command that starts and reads a dev instance   | `haci-coordinator-debug`, `haci-config-flow`               |
+| which language files an agent may change           | `haci-translations`, `haci-user-experience`                |
+| the release procedure                              | `haci-marketplace`                                         |
 
 [ha-integration-blueprint](https://github.com/jpawlowski/ha-integration-blueprint) is one template that names all of
 them and enables the default plugins for you.
 
 ## Rules files
 
-A skill that comes with rules keeps them in `references/rules.md`: frontmatter with a `name` and a `description`, then
+A skill that comes with rules keeps them in `references/rules.md`, or one `references/rules.<topic>.md` per kind of file: frontmatter with a `name` and a `description`, then
 plain Markdown with no relative links. A project can copy the file into its own path-scoped instructions — for Copilot
 and VS Code `applyTo`, for Claude Code `paths` — so the rules load whenever an agent opens a matching file, even
 without the skill. Copy it at the tag you pin, and copy it again when the pin moves.
@@ -54,7 +60,26 @@ A repository can register the marketplace and enable plugins for everyone who wo
 `extraKnownMarketplaces` and `enabledPlugins` in `.claude/settings.json` and `.github/copilot/settings.json`, and
 `[plugins."<plugin>@ha-custom-integration-skills"]` in `.codex/config.toml`.
 
-OpenCode has no plugin marketplace that can carry skills, so these skills do not reach it.
+### OpenCode
+
+OpenCode has no plugin marketplace, but it reads a skill catalog over HTTP: each plugin publishes one in
+`plugins/<plugin>/skills/index.json`. List the catalogs of the plugins you want in `opencode.json`, pinned to the
+release tag the other agents use (catalogs ship from the first release after `v0.4.0`):
+
+```json
+{
+  "skills": [
+    "https://raw.githubusercontent.com/jpawlowski/ha-custom-integration-skills/vX.Y.Z/plugins/haci-plan/skills/",
+    "https://raw.githubusercontent.com/jpawlowski/ha-custom-integration-skills/vX.Y.Z/plugins/haci-quality/skills/",
+    "https://raw.githubusercontent.com/jpawlowski/ha-custom-integration-skills/vX.Y.Z/plugins/haci-review/skills/"
+  ]
+}
+```
+
+OpenCode downloads every file of each skill, `references/` included, and caches them per URL, so moving the tag
+fetches the new release. It fetches each catalog again when it starts and leaves a skill out while the catalog cannot
+be reached. Turning a plugin off is removing its line. `script/opencode-index` writes the catalogs and `script/check`
+fails when one is out of date.
 
 In Claude Code a plugin skill is invoked with its plugin's name in front: `/haci-plan:haci-grill`.
 

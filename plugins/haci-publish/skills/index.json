@@ -1,0 +1,14 @@
+{
+  "skills": [
+    {
+      "name": "haci-marketplace",
+      "version": "def79645cc246a20",
+      "files": [
+        "SKILL.md",
+        "references/catalog-pr.md",
+        "references/checks.md",
+        "references/lifecycle.md"
+      ]
+    }
+  ]
+}

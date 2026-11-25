@@ -1,0 +1,13 @@
+{
+  "name": "haci-publish",
+  "version": "0.4.0",
+  "description": "Publish a Home Assistant custom integration through HACS and the Marketplace, and keep the listing healthy.",
+  "author": {
+    "name": "Julian Pawlowski",
+    "url": "https://github.com/jpawlowski"
+  },
+  "homepage": "https://github.com/jpawlowski/ha-custom-integration-skills",
+  "repository": "https://github.com/jpawlowski/ha-custom-integration-skills",
+  "license": "MIT",
+  "keywords": ["home-assistant", "custom-integration", "hacs", "marketplace", "release"]
+}

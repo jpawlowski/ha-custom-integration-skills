@@ -1,0 +1,19 @@
+{
+  "skills": [
+    {
+      "name": "haci-grill",
+      "version": "21218a659ab629bb",
+      "files": [
+        "SKILL.md",
+        "references/question-bank.md"
+      ]
+    },
+    {
+      "name": "haci-planning",
+      "version": "dab73164b6704df9",
+      "files": [
+        "SKILL.md"
+      ]
+    }
+  ]
+}

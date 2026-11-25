@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -123,7 +124,7 @@ def check_plugin(directory: Path, seen_skills: dict[str, str]) -> None:
             fail(f"{rel}: skill name also used in plugin {seen_skills[skill_name]} — agents that do not prefix collide")
         seen_skills[skill_name] = name
 
-    for rules in sorted((directory / "skills").glob("*/references/rules.md")):
+    for rules in sorted((directory / "skills").glob("*/references/rules*.md")):
         check_rules(rules)
 
     for doc in directory.rglob("*.md"):
@@ -170,6 +171,9 @@ def main() -> int:
             versions.add(load(directory / "plugin.json").get("version"))
     if len(versions) > 1:
         fail(f"plugins carry different versions {sorted(map(str, versions))}; they are released together")
+
+    index = subprocess.run([ROOT / "script" / "opencode-index", "--check"], capture_output=True, text=True)
+    errors.extend(line.removeprefix("✗ ") for line in index.stderr.splitlines() if line.strip())
 
     for message in errors:
         print(f"✗ {message}", file=sys.stderr)

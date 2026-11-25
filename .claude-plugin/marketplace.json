@@ -19,9 +19,19 @@
       "description": "Review a branch before it is pushed: simplify, rerun the gates, then a reviewer that did not write it."
     },
     {
+      "name": "haci-build",
+      "source": "./plugins/haci-build",
+      "description": "Home Assistant building knowledge: entities and platforms, service actions, config flows, translations, user experience, the coordinator and diagnostics."
+    },
+    {
       "name": "haci-quality",
       "source": "./plugins/haci-quality",
       "description": "Home Assistant quality knowledge: tests, current APIs and deprecations, breaking changes and repairs, and the Quality Scale review."
+    },
+    {
+      "name": "haci-publish",
+      "source": "./plugins/haci-publish",
+      "description": "Publish a Home Assistant custom integration through HACS and the Marketplace, and keep the listing healthy."
     },
     {
       "name": "haci-triage",

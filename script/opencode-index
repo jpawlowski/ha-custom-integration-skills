@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""Write each plugin's OpenCode skill catalog, plugins/<plugin>/skills/index.json.
+
+OpenCode reads an HTTP skill catalog from the URL in an `opencode.json` `"skills"` entry: it fetches `index.json`
+there and downloads every file an entry lists from `<url>/<skill>/<file>`. One catalog per plugin keeps a plugin a
+unit someone turns off — a project lists only the catalogs of the plugins it wants. `version` is a hash of the
+skill's files, so OpenCode refreshes its cached copy whenever one changes.
+
+Usage:
+    script/opencode-index [--check] [plugin ...]
+
+Without a plugin name, every directory under plugins/ is written. --check writes nothing and fails when a catalog
+is missing or stale.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+PLUGINS = ROOT / "plugins"
+INDEX = "index.json"
+
+
+def skill_files(skill: Path) -> list[str]:
+    """Every file of the skill relative to its directory, SKILL.md first; hidden paths are skipped as OpenCode does."""
+    files = sorted(
+        path.relative_to(skill).as_posix()
+        for path in skill.rglob("*")
+        if path.is_file() and not any(part.startswith(".") for part in path.relative_to(skill).parts)
+    )
+    return sorted(files, key=lambda name: name != "SKILL.md")
+
+
+def version(skill: Path, files: list[str]) -> str:
+    digest = hashlib.sha256()
+    for name in files:
+        digest.update(name.encode() + b"\0" + (skill / name).read_bytes() + b"\0")
+    return digest.hexdigest()[:16]
+
+
+def render(plugin: Path) -> str:
+    skills = []
+    for skill_md in sorted((plugin / "skills").glob("*/SKILL.md")):
+        files = skill_files(skill_md.parent)
+        skills.append({"name": skill_md.parent.name, "version": version(skill_md.parent, files), "files": files})
+    return json.dumps({"skills": skills}, indent=2) + "\n"
+
+
+def main(argv: list[str]) -> int:
+    check = "--check" in argv
+    names = [arg for arg in argv if arg != "--check"]
+    plugins = [PLUGINS / name for name in names] or sorted(d for d in PLUGINS.iterdir() if d.is_dir())
+    stale = []
+    for plugin in plugins:
+        if not (plugin / "skills").is_dir():
+            print(f"✗ {plugin.relative_to(ROOT)}: no skills/ directory", file=sys.stderr)
+            return 1
+        target = plugin / "skills" / INDEX
+        expected = render(plugin)
+        current = target.read_text(encoding="utf-8") if target.is_file() else None
+        if current == expected:
+            continue
+        if check:
+            stale.append(target.relative_to(ROOT).as_posix())
+        else:
+            target.write_text(expected, encoding="utf-8")
+            print(f"wrote {target.relative_to(ROOT)}")
+    for path in stale:
+        print(f"✗ {path} is missing or stale — run script/opencode-index", file=sys.stderr)
+    return 1 if stale else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

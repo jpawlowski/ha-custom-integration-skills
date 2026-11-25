@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "haci-change-review",
+      "version": "4b6e0e4b218407e0",
+      "files": [
+        "SKILL.md",
+        "references/reviewer-brief.md"
+      ]
+    }
+  ]
+}

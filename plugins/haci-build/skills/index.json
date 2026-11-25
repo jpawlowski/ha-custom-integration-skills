@@ -1,0 +1,66 @@
+{
+  "skills": [
+    {
+      "name": "haci-config-flow",
+      "version": "b145b278c5f90f00",
+      "files": [
+        "SKILL.md",
+        "references/discovery-matchers.md",
+        "references/flow-types.md",
+        "references/migration.md",
+        "references/oauth2.md",
+        "references/rules.manifest.md",
+        "references/rules.md"
+      ]
+    },
+    {
+      "name": "haci-coordinator-debug",
+      "version": "5ff88ba04384cd7d",
+      "files": [
+        "SKILL.md",
+        "references/async-rules.md",
+        "references/rules.diagnostics.md",
+        "references/rules.md"
+      ]
+    },
+    {
+      "name": "haci-entity-platform",
+      "version": "b77b93ed19fdaec2",
+      "files": [
+        "SKILL.md",
+        "references/climate-and-appliances.md",
+        "references/controls.md",
+        "references/lifecycle.md",
+        "references/other-platforms.md",
+        "references/rules.md",
+        "references/sensors.md"
+      ]
+    },
+    {
+      "name": "haci-service-action",
+      "version": "0b52da37dd0b0097",
+      "files": [
+        "SKILL.md",
+        "references/rules.md",
+        "references/rules.services-yaml.md",
+        "references/triggers-conditions.md"
+      ]
+    },
+    {
+      "name": "haci-translations",
+      "version": "de017c7de30f6d92",
+      "files": [
+        "SKILL.md",
+        "references/rules.md"
+      ]
+    },
+    {
+      "name": "haci-user-experience",
+      "version": "47918e1ba519455c",
+      "files": [
+        "SKILL.md",
+        "references/patterns.md"
+      ]
+    }
+  ]
+}
