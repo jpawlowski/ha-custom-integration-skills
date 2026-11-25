@@ -1,6 +1,6 @@
 {
   "name": "haci-publish",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Publish a Home Assistant custom integration through HACS and the Marketplace, and keep the listing healthy.",
   "author": {
     "name": "Julian Pawlowski",

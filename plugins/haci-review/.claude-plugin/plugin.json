@@ -1,6 +1,6 @@
 {
   "name": "haci-review",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Review a branch before it is pushed: simplify, rerun the gates, then a reviewer that did not write it.",
   "author": {
     "name": "Julian Pawlowski",
