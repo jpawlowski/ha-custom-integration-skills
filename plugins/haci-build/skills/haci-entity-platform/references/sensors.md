@@ -32,6 +32,8 @@ otherwise. Beyond the tables:
 
 - `TOTAL` without `last_reset` is the recommended default for a meter.
 - `TOTAL_INCREASING` for a value that only rises and resets to zero — a drop of more than 10% is read as a new cycle.
+  Between the two: a counter the device keeps and only ever raises (grid import) is `TOTAL_INCREASING`; a net or
+  bidirectional one is `TOTAL`.
 - `MEASUREMENT_ANGLE` for an angle such as a wind direction, so statistics average it as a circular quantity.
 - `SensorDeviceClass.ENUM` requires `options` and **cannot** carry `state_class` or `native_unit_of_measurement`. It
   is also not named after its device class — it needs a `translation_key`.

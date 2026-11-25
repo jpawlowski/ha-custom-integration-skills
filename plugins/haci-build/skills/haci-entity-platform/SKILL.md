@@ -135,17 +135,19 @@ again until the entry reloads. Both rules: `quality-scale-rules.md` in `haci-qua
 ### 5. Translations
 
 Add the `translation_key` under `entity.<platform>.<key>.name` in `translations/en.json`, plus `state` keys for enum
-sensors. Which other language files you may touch is the project's policy; where it names none, leave them to their
+sensors. A repository that keeps a Core-style `strings.json` edits that and regenerates or copies `translations/en.json`
+from it — a custom integration loads only the latter. Which other language files you may touch is the project's policy; where it names none, leave them to their
 translators. See [`haci-translations`](../haci-translations/SKILL.md).
 
 ### 6. Validate
 
 Run the project's lint, type check, hassfest validation and test suite. Where it names no commands, run the tools it
 configures (`ruff`, `pyright` or `mypy`, `pytest`), and for hassfest the `home-assistant/actions/hassfest` GitHub
-Action (or `python -m script.hassfest` in a Home Assistant Core checkout).
+Action (or `python -m script.hassfest` in a Home Assistant Core checkout). A check you could not run is reported as
+not run, never skipped silently.
 
 Then restart the project's Home Assistant development instance and confirm the entity appears with the expected name,
-unit, icon, and category. If it does not appear at all, switch to
+unit, icon, and category. Without one, say that the entity was verified through the tests only. If it does not appear at all, switch to
 [`haci-coordinator-debug`](../haci-coordinator-debug/SKILL.md).
 
 ## Something happened, rather than something is

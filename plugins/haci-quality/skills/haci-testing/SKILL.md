@@ -23,7 +23,18 @@ what never to mock. A project may already load the same text as a path-scoped in
 scaffolding and the judgement calls.
 
 **The project wins.** Its `AGENTS.md` (or `CLAUDE.md`, `CONTRIBUTING.md`) names the test command, the test directory
-layout and its own fixtures; use those. Where it names none, run `pytest` and follow the defaults below.
+layout and its own fixtures; use those. Where it names none, run `pytest` and follow the defaults below. A repository
+with no pytest configuration yet needs this much before the first test can import the integration:
+
+```toml
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = ["."]
+testpaths = ["tests"]
+```
+
+`pythonpath` puts the repository root, and with it `custom_components`, on `sys.path`; `python -m pytest` happens to
+do the same and so hides a missing entry.
 
 ## When a test is required
 
@@ -44,8 +55,9 @@ Most integrations need three fixtures in `tests/conftest.py`. Where the project 
 instead of defining a variant per file; where it has none, these names are the common choice:
 
 - `config_entry` — a `MockConfigEntry`, not yet added to `hass`.
-- `mock_api` — the `AsyncMock` that stands in for the data source, patched where the integration imports it; set
-  `return_value` or `side_effect` per test.
+- `mock_api` — the `AsyncMock` that stands in for the data source: the client's lowest request method, patched on the
+  class that defines it so every import site sees it (a third-party library client is patched where the integration
+  imports it instead); set `return_value` or `side_effect` per test.
 - `init_integration` — adds `config_entry`, sets it up with `mock_api` active, and returns the loaded entry.
 
 Building them, and the variant for a third-party library client:
@@ -62,7 +74,7 @@ tests/
 ├── test_init.py               # setup, unload, reload, migration
 ├── test_config_flow.py        # user, reauth, reconfigure, options, discovery
 ├── test_diagnostics.py        # snapshot + redaction
-├── sensor/test_air_quality.py
+├── test_sensor.py             # sensor/test_air_quality.py when the platform is a package
 └── snapshots/                 # syrupy .ambr files, committed
 ```
 
@@ -128,6 +140,10 @@ unequal.
 [`references/recipes.md`](references/recipes.md#every-entity-of-a-platform-snapshot_platform).
 
 ### Config flow
+
+A flow that ends in `CREATE_ENTRY` sets the new entry up for real. Where a flow test should not depend on setup, patch
+`custom_components.<domain>.async_setup_entry` with a `mock_setup_entry` fixture returning `True`, as Core does. For an
+`already_configured` abort, give the existing `config_entry` the unique ID the flow derives from the payload.
 
 ```python
 @pytest.mark.usefixtures("mock_api")

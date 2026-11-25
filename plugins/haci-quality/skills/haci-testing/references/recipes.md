@@ -3,6 +3,33 @@
 Fixtures and patterns from [`../SKILL.md`](../SKILL.md) spelled out. `<domain>` is the integration's domain and
 `ApiClient` its client class; replace both.
 
+## Imports
+
+```python
+from collections.abc import Generator
+from unittest.mock import AsyncMock, patch
+
+from freezegun.api import FrozenDateTimeFactory
+import pytest
+from syrupy.assertion import SnapshotAssertion
+
+from homeassistant.config_entries import SOURCE_USER, ConfigEntryState
+from homeassistant.core import HomeAssistant
+from homeassistant.data_entry_flow import FlowResultType
+from homeassistant.helpers import entity_registry as er
+from pytest_homeassistant.common import (
+    MockConfigEntry,
+    async_fire_time_changed,
+    load_json_object_fixture,
+    snapshot_platform,
+)
+from pytest_homeassistant.components.diagnostics import get_diagnostics_for_config_entry
+from pytest_homeassistant.typing import ClientSessionGenerator
+```
+
+With the older `pytest-homeassistant-custom-component` package, the last three come from
+`pytest_homeassistant_custom_component` instead.
+
 ## The three shared fixtures
 
 ```python
@@ -10,7 +37,7 @@ Fixtures and patterns from [`../SKILL.md`](../SKILL.md) spelled out. `<domain>` 
 def mock_api() -> Generator[AsyncMock]:
     """Replace the client's HTTP layer, keeping its payload logic under test."""
     with patch(
-        "custom_components.<domain>.api.client.ApiClient._request",
+        "custom_components.<domain>.api.ApiClient._request",
         new_callable=AsyncMock,
         return_value=load_json_object_fixture("device.json"),
     ) as request:
@@ -38,8 +65,10 @@ async def init_integration(hass: HomeAssistant, mock_api: AsyncMock, config_entr
     return config_entry
 ```
 
-Patching the client's lowest request method keeps its payload handling under test. The module path is wherever the
-project's client lives.
+Patching the client's lowest request method keeps its payload handling under test. The path is the module that
+defines the class: `custom_components.<domain>.api.ApiClient._request` for an `api.py`,
+`custom_components.<domain>.api.client.ApiClient._request` for an `api/` package. A client without one such method
+gets its public methods patched instead, each with `autospec=True`.
 
 ## `mock_api` for a third-party library client
 
@@ -99,6 +128,5 @@ async def test_sensors(
     await snapshot_platform(hass, entity_registry, snapshot, config_entry.entry_id)
 ```
 
-`snapshot_platform` (from `pytest_homeassistant.common`, or `pytest_homeassistant_custom_component.common`) accepts exactly one platform and fails on a
-disabled entity, so request `entity_registry_enabled_by_default`, which `pytest-homeassistant` provides — never define
+`snapshot_platform` accepts exactly one platform and fails on a disabled entity, so request `entity_registry_enabled_by_default`, which `pytest-homeassistant` provides — never define
 it again in `conftest.py`.
