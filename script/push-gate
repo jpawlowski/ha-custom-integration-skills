@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# script/push-gate: Validate the pushed commit before git push sends it
+#
+# Runs as git's pre-push hook through .pre-commit-config.yaml. The push must send the checked-out HEAD of a clean
+# worktree, or a tag on it, so that script/check checks exactly the commit that leaves the machine.
+#
+# Usage:
+#   ./script/push-gate
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+die() {
+    echo "✗ push-gate: $1" >&2
+    exit 1
+}
+
+if [[ -n $(git status --porcelain --untracked-files=all) ]]; then
+    die "the worktree is dirty; commit or stash every change so the check sees the pushed commit"
+fi
+
+pushed_ref=${PRE_COMMIT_LOCAL_BRANCH:-HEAD}
+pushed_commit=${PRE_COMMIT_TO_REF:-HEAD}
+current_branch=$(git symbolic-ref --quiet --short HEAD || true)
+case $pushed_ref in
+    HEAD | refs/tags/*) ;;
+    "refs/heads/$current_branch") [[ -n $current_branch ]] || die "HEAD is detached" ;;
+    *) die "this push sends ${pushed_ref#refs/heads/}, not the checked-out ${current_branch:-HEAD}; only HEAD is validated" ;;
+esac
+if [[ $(git rev-parse "$pushed_commit^{commit}") != $(git rev-parse HEAD) ]]; then
+    die "${pushed_ref#refs/*/} does not point at the checked-out HEAD; only HEAD is validated"
+fi
+
+script/check
