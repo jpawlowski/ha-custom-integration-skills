@@ -1,6 +1,6 @@
 {
   "name": "haci-build",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Home Assistant building knowledge: entities and platforms, service actions, config flows, translations, user experience, the coordinator and diagnostics.",
   "author": {
     "name": "Julian Pawlowski",
