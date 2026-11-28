@@ -36,16 +36,15 @@ the name to `probatio`, and only the type checker complains.
 
 ## Config entry runtime state and setup
 
-| Do not use                                                                                   | Use instead                                                                        | Removed in                 |
-| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------- |
-| `hass.data[DOMAIN][entry.entry_id] = …`                                                      | `entry.runtime_data = MyIntegrationData(...)`                                      | —                          |
-| Untyped `ConfigEntry`                                                                        | `type MyIntegrationConfigEntry = ConfigEntry[MyIntegrationData]`                   | —                          |
-| `async_forward_entry_setup` (singular)                                                       | `async_forward_entry_setups(entry, PLATFORMS)`                                     | gone                       |
-| `entry.add_update_listener` without cleanup                                                  | `entry.async_on_unload(entry.add_update_listener(...))`                            | —                          |
-| An update listener on an entry the flow reloads with `async_update_reload_and_abort`         | Drop the listener and let the flow reload; or finish with `async_update_and_abort` | gone — raises `ValueError` |
-| An update listener on an entry that `_abort_if_unique_id_configured` reloads by default      | Drop the listener; or pass `reload_on_update=False`                                | — (logged, no date)        |
-| An update listener together with `OptionsFlowWithReload`, or with the subentry reload helper | Drop the listener                                                                  | gone — raises `ValueError` |
-| `hass.async_add_job`                                                                         | `entry.async_create_task` / `entry.async_create_background_task`                   | overdue (2025.4)           |
+| Do not use                                                                                                                                  | Use instead                                                                                                                                              | Removed in                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `hass.data[DOMAIN][entry.entry_id] = …`                                                                                                     | `entry.runtime_data = MyIntegrationData(...)`                                                                                                            | —                                     |
+| Untyped `ConfigEntry`                                                                                                                       | `type MyIntegrationConfigEntry = ConfigEntry[MyIntegrationData]`                                                                                         | —                                     |
+| `async_forward_entry_setup` (singular)                                                                                                      | `async_forward_entry_setups(entry, PLATFORMS)`                                                                                                           | gone                                  |
+| `entry.add_update_listener` without cleanup                                                                                                 | `entry.async_on_unload(entry.add_update_listener(...))`                                                                                                  | —                                     |
+| An update listener on an entry the flow reloads — `async_update_reload_and_abort`, `_abort_if_unique_id_configured` with its default reload | Drop the listener and let the flow reload; or finish with `async_update_and_abort`, or pass `reload_on_update=False` to `_abort_if_unique_id_configured` | — (logged, no date; an error in Core) |
+| An update listener together with `OptionsFlowWithReload`, or with the subentry reload helper                                                | Drop the listener                                                                                                                                        | gone — raises `ValueError`            |
+| `hass.async_add_job`                                                                                                                        | `entry.async_create_task` / `entry.async_create_background_task`                                                                                         | overdue (2025.4)                      |
 
 ## Config flow
 
@@ -139,7 +138,7 @@ the name to `probatio`, and only the type checker complains.
 
 ## Recorder statistics
 
-| Do not use                                                                                               | Use instead                                                                                                                    | Removed in                         |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
-| `async_import_statistics` / `async_add_external_statistics` metadata without `mean_type` or `unit_class` | Set both in `StatisticMetaData` — Home Assistant now fills in missing ones without a warning, and can pick the wrong mean type | — (no longer logged)               |
-| `async_update_statistics_metadata(new_unit_of_measurement=…)` without `new_unit_class`                   | Pass `new_unit_class` as well                                                                                                  | gone — raises `HomeAssistantError` |
+| Do not use                                                                                               | Use instead                     | Removed in                         |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------- | ---------------------------------- |
+| `async_import_statistics` / `async_add_external_statistics` metadata without `mean_type` or `unit_class` | Set both in `StatisticMetaData` | gone — raises `HomeAssistantError` |
+| `async_update_statistics_metadata(new_unit_of_measurement=…)` without `new_unit_class`                   | Pass `new_unit_class` as well   | gone — raises `HomeAssistantError` |

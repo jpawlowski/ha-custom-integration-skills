@@ -2,7 +2,7 @@
   "skills": [
     {
       "name": "haci-config-flow",
-      "version": "18c34ad8f2c0abdc",
+      "version": "2492a1b3f0a0362d",
       "files": [
         "SKILL.md",
         "references/discovery-matchers.md",

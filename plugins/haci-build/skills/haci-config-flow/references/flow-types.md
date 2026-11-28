@@ -93,7 +93,8 @@ The handler is constructed with **no arguments** (`return OptionsFlowHandler()`)
 
 **Auto-reload:** subclass `OptionsFlowWithReload`. Every change has one reload owner: this class for options,
 `async_update_reload_and_abort` for reauth and reconfigure. **Do not add an update listener (`entry.add_update_listener`)
-next to them** — with one, both raise `ValueError` (`deprecations.md` in `haci-modern-apis`, plugin `haci-quality`).
+next to them** — with one, `OptionsFlowWithReload` raises `ValueError` and `async_update_reload_and_abort` logs a
+warning (`deprecations.md` in `haci-modern-apis`, plugin `haci-quality`).
 Where a listener genuinely must stay, finish with `async_update_and_abort` and let the listener reload;
 `_abort_if_unique_id_configured` takes `reload_on_update=False` for the same reason. Any other
 reload from code is `hass.config_entries.async_schedule_reload(entry.entry_id)`, not `async_reload`.
