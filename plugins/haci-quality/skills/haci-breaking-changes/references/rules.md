@@ -44,7 +44,8 @@ ir.async_create_issue(
 ```
 
 - **An issue about one config entry carries the entry ID in its `issue_id`.** Issue IDs are unique per domain only;
-  without it, the issues of two entries overwrite each other. Put the entry ID in `data` as well — the repair flow reads
+  without it, the issues of two entries overwrite each other — re-creating an issue with a different
+  `config_entry_id` moves it to the new entry and is logged. Put the entry ID in `data` as well — the repair flow reads
   it from there, not from `self.handler`, which is the domain.
 - **Entry-scoped issues:** `config_entry_id=entry.entry_id` on `async_create_issue` ties the issue to the entry —
   hidden while it is disabled, deleted when it is removed, so no cleanup code is needed — and
@@ -102,8 +103,9 @@ class DeprecatedOptionRepairFlow(RepairsFlow):
 ```
 
 - Home Assistant sets `self.issue_id` and `self.data` (the issue's `data`) on the flow after `async_create_fix_flow`
-  returns it — do not pass them in yourself, they would be overwritten. `self.handler` is the **domain**, never an
-  entry ID.
+  returns it — never set them yourself; setting `self.issue_id` is logged and stops working in 2027.12. Read the ID
+  from `self.issue_id`, not from `user_input`. `self.handler` is the **domain**, never an entry ID.
+- A repair flow started from code takes the issue ID in `context={"issue_id": …}`, not in `data`.
 - The form mechanics are Data Entry Flow's, identical to the config flow's. What differs: `async_create_entry(data={})`
   always takes an **empty** dict, and it removes the issue on its own.
 - Validate user input before applying the fix, and keep a repair to one or two steps.

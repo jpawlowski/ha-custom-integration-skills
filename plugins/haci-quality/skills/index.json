@@ -2,7 +2,7 @@
   "skills": [
     {
       "name": "haci-breaking-changes",
-      "version": "2316977da6d7132f",
+      "version": "1312ca90d4ee1849",
       "files": [
         "SKILL.md",
         "references/recipes.md",
@@ -11,7 +11,7 @@
     },
     {
       "name": "haci-modern-apis",
-      "version": "5038fdc5143cc50a",
+      "version": "6d26fdb817c626eb",
       "files": [
         "SKILL.md",
         "references/deprecations.md",

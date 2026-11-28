@@ -186,7 +186,8 @@ Device info is only used when the entity is set up from a **config entry** and h
 device is not attached, and returning `device_info` anyway is reported — do not do it.
 
 Every text field of `DeviceInfo` (`model`, `sw_version`, `serial_number`, …) must be a `str` — convert a firmware
-number or an integer serial yourself; a non-string value is reported. Dates for both: `device-registry.md` in
+number or an integer serial yourself; a non-string value raises `TypeError`. A `DeviceInfo` is a dataclass: read a
+held one as attributes (`info.model`), never as a mapping. Dates for all three: `device-registry.md` in
 `haci-modern-apis`.
 
 **Never set `entity_id`** — an invalid one, or one whose domain is not the entity's platform, is reported
