@@ -2,7 +2,7 @@
   "skills": [
     {
       "name": "haci-config-flow",
-      "version": "b145b278c5f90f00",
+      "version": "2492a1b3f0a0362d",
       "files": [
         "SKILL.md",
         "references/discovery-matchers.md",
@@ -25,7 +25,7 @@
     },
     {
       "name": "haci-entity-platform",
-      "version": "b4cca1ad97b0be02",
+      "version": "460ceac63da9d6f6",
       "files": [
         "SKILL.md",
         "references/climate-and-appliances.md",
