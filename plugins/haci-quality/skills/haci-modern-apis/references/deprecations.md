@@ -12,7 +12,8 @@ The device registry has its own file: [`device-registry.md`](device-registry.md)
 **How to read the "Removed in" column.** A version means the old form still works in that release and logs a
 warning until then — `breaks_in_ha_version` from the source. **gone** means it no longer exists in that release,
 so old code fails right away. **overdue** means the removal version has passed but the old form is still there; it can
-vanish in any release. **—** means not deprecated upstream, but the wrong choice in new code. How tests catch the
+vanish in any release. **—** means not deprecated upstream, but the wrong choice in new code; **— (logged, no
+date)** means Home Assistant logs it without naming a removal version. How tests catch the
 logged ones: [`haci-testing`](../../haci-testing/SKILL.md#deprecations-and-warnings).
 
 ## Schema validation — `voluptuous` replaced by `probatio`
@@ -138,7 +139,7 @@ the name to `probatio`, and only the type checker complains.
 
 ## Recorder statistics
 
-| Do not use                                                                                               | Use instead                                                                                                   | Removed in                         |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `async_import_statistics` / `async_add_external_statistics` metadata without `mean_type` or `unit_class` | Set both in `StatisticMetaData` — missing ones are now filled in silently, which can pick the wrong mean type | gone — no longer logged            |
-| `async_update_statistics_metadata(new_unit_of_measurement=…)` without `new_unit_class`                   | Pass `new_unit_class` as well                                                                                 | gone — raises `HomeAssistantError` |
+| Do not use                                                                                               | Use instead                                                                                                                    | Removed in                         |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| `async_import_statistics` / `async_add_external_statistics` metadata without `mean_type` or `unit_class` | Set both in `StatisticMetaData` — Home Assistant now fills in missing ones without a warning, and can pick the wrong mean type | — (no longer logged)               |
+| `async_update_statistics_metadata(new_unit_of_measurement=…)` without `new_unit_class`                   | Pass `new_unit_class` as well                                                                                                  | gone — raises `HomeAssistantError` |
