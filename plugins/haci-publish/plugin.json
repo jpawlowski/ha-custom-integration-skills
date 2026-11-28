@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "haci-publish",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Publish a Home Assistant custom integration through HACS and the Marketplace, and keep the listing healthy.",
   "author": {
     "name": "Julian Pawlowski",

@@ -1,6 +1,6 @@
 {
   "name": "haci-quality",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Home Assistant quality knowledge: tests, current APIs and deprecations, breaking changes and repairs, and the Quality Scale review.",
   "author": {
     "name": "Julian Pawlowski",
