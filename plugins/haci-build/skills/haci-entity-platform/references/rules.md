@@ -185,9 +185,11 @@ Fill in whatever the source actually knows beyond `identifiers`, `name`, `manufa
 Device info is only used when the entity is set up from a **config entry** and has a `unique_id`. Without one the
 device is not attached, and returning `device_info` anyway is reported — do not do it.
 
-Every text field of `DeviceInfo` (`model`, `sw_version`, `serial_number`, …) must be a `str` — convert a firmware
-number or an integer serial yourself; a non-string value raises `TypeError`. A `DeviceInfo` is a dataclass: read a
-held one as attributes (`info.model`), never as a mapping. Dates for all three: `device-registry.md` in
+Every text field of `DeviceInfo` (`model`, `sw_version`, `serial_number`, …) is a `str` — convert a firmware number or an
+integer serial yourself; a type other than `str`, `None` or `Undefined` raises `TypeError`. `None` clears a value already stored, so a value the
+device did not report this time is left out, not passed as `None`. A `DeviceInfo` is a
+dataclass: read a held one as attributes (`info.model`), never as a mapping, and an unset field is `Undefined`, not
+`None`. Dates for all three: `device-registry.md` in
 `haci-modern-apis`.
 
 **Never set `entity_id`** — an invalid one, or one whose domain is not the entity's platform, is reported
