@@ -102,11 +102,11 @@ These are logged and keep working until the version in the last column. How test
 
 ## Gone — fails right away
 
-| Do not use                                                                                                   | Use instead                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| A value that is neither a `str` nor `None` (an `int` firmware version, an enum) for `sw_version`, `model`, … | Pass a `str`. `None` clears a stored value; leave the field out to keep it. Anything else raises `TypeError` |
-| **Reading** `DeviceEntry.suggested_area`                                                                     | `area_id`, or `dr.async_get_effective_area_id(hass, device)`                                                 |
-| `async_update_device(suggested_area=…)`                                                                      | Nothing — the user moves devices between areas                                                               |
+| Do not use                                                                                                           | Use instead                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| A value that is not a `str`, `None` or `Undefined` (an `int` firmware version, an enum) for `sw_version`, `model`, … | Pass a `str`. `None` clears a stored value; leave the field out to keep it. Anything else raises `TypeError` |
+| **Reading** `DeviceEntry.suggested_area`                                                                             | `area_id`, or `dr.async_get_effective_area_id(hass, device)`                                                 |
+| `async_update_device(suggested_area=…)`                                                                              | Nothing — the user moves devices between areas                                                               |
 
 Setting `suggested_area` in `DeviceInfo`, `ChildDeviceInfo` or `async_get_or_create` is **not** deprecated: it places a
 new device in that area when it is first registered.
